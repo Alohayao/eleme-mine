@@ -6,7 +6,7 @@
       <router-link class="tab-item" to="/ratings">评论</router-link>
       <router-link class="tab-item" to="/seller">商家</router-link>
     </nav>
-    <router-view></router-view>
+    <router-view class="tab-content"></router-view>
   </div>
 </template>
 
@@ -45,6 +45,8 @@ export default {
 <style lang="stylus" scoped>
   @import './common/stylus/mixin.stylus'
   #app
+    display flex
+    flex-direction column
     width 100%
     height 100%
     .tab
@@ -62,4 +64,6 @@ export default {
         font-size 14px
         &.router-link-active
           color #ed2122
+    .tab-content
+      border-top 1px solid rgba(7, 17, 27, 0.1)
 </style>

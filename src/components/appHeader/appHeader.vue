@@ -32,38 +32,42 @@
       <span class="text">{{seller.bulletin}}</span>
       <i class="icon-keyboard_arrow_right"></i>
     </div>
-    <div class="detail" v-show="detaiShow">
-      <div class="detail-wrapper">
-        <h1 class="name">{{seller.name}}</h1>
-        <div class="star-wrapper">
-          <star v-bind:score="seller.score"></star>
-        </div>
-        <div class="sale-info">
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">优惠信息</div>
-            <div class="line"></div>
+    <transition name="fade">
+      <div class="detail" v-show="detaiShow">
+        <div class="detail-wrapper">
+          <div class="detail-main">
+            <h1 class="name">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star v-bind:score="seller.score" v-bind:size="48"></star>
+            </div>
+            <div class="sale-info">
+              <div class="title">
+                <div class="line"></div>
+                <div class="text">优惠信息</div>
+                <div class="line"></div>
+              </div>
+              <ul class="sale-detail" >
+                <li class="sale-item" v-for="(item, index) in seller.supports" v-bind:key="index">
+                  <span class="icon" v-bind:class="type[item.type]"></span>
+                  <span class="text">{{item.description}}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="seller-bulletin">
+              <div class="title">
+                <div class="line"></div>
+                <div class="text">商家公告</div>
+                <div class="line"></div>
+              </div>
+              <div class="description">{{seller.bulletin}}</div>
+            </div>
           </div>
-          <ul class="sale-detail" >
-            <li class="sale-item" v-for="(item, index) in seller.supports" v-bind:key="index">
-              <span class="icon" v-bind:class="type[item.type]"></span>
-              <span class="text">{{item.description}}</span>
-            </li>
-          </ul>
         </div>
-        <div class="seller-bulletin">
-          <div class="title">
-            <div class="line"></div>
-            <div class="text">商家公告</div>
-            <div class="line"></div>
-          </div>
-          <div class="description">{{seller.bulletin}}</div>
+        <div class="detail-close" v-on:click="closeDetail">
+          <i class="icon-close"></i>
         </div>
       </div>
-      <div class="detail-close" v-on:click="closeDetail">
-        <i class="icon-close"></i>
-      </div>
-    </div>
+    </transition>
   </header>
 </template>
 
@@ -84,6 +88,9 @@ export default {
       detaiShow: false
     }
   },
+  mounted () {
+    console.log('header')
+  },
   methods: {
     showDetail() {
       this.detaiShow = true
@@ -97,12 +104,17 @@ export default {
 
 <style lang="stylus" scoped>
   @import '../../common/stylus/mixin.stylus'
+  .fade-enter-active, .fade-leave-active
+    transition: transform .5s
+  .fade-enter, .fade-leave-to
+    transform translateX(100%)
   .AppHeader
     width 100%
     height 134px
     color #ffffff
     position relative
     background rgba(7, 17, 27, 0.5)
+    overflow hidden
     .blurBg
       z-index -1
       position absolute
@@ -194,7 +206,7 @@ export default {
         bg-image('bulletin')
       .text
         line-height 28px
-        width 311px
+        margin 0 4px
         overflow hidden
         text-overflow ellipsis
         white-space nowrap
@@ -205,91 +217,92 @@ export default {
       top 0
       background rgba(7, 17, 27, .8)
       width 100%
-      min-height 100%
-      padding-top 64px
-      box-sizing border-box
+      height 100%
+      overflow auto
       .detail-wrapper
-        .name
-          font-size 16px
-          font-weight 700
-          line-height 16px
-          text-align center
-        .star-wrapper
-          margin-top 16px
-          text-align center
-        .sale-info
-          padding-left 36px
-          padding-right 36px
-          .title
-            margin-top 28px
-            margin-bottom 24px
-            display flex
-            align-items center
-            flex-shrink 0
-            .line
-              width 110px
-              border-top 1px solid rgba(255, 255, 255, 0.2)
-            .text
-              font-size 14px
-              font-weight 700
-              margin-left 12px
-              margin-right 12px
-              text-align center
-          .sale-detail
-            padding-left 12px
-            .sale-item
-              margin-bottom 12px
+        min-height 100%
+        .detail-main
+          // margin-top 64px
+          padding-top 64px
+          padding-bottom 64px
+          .name
+            font-size 16px
+            font-weight 700
+            line-height 16px
+            text-align center
+          .star-wrapper
+            margin-top 16px
+            text-align center
+          .sale-info
+            padding-left 36px
+            padding-right 36px
+            .title
+              margin-top 28px
+              margin-bottom 24px
               display flex
               align-items center
-              .icon
-                width 16px
-                height 16px
-                background-size cover
-                background-repeat no-repeat
-                &.decrease
-                  bg-image('decrease_1')
-                &.discount
-                  bg-image('discount_1')
-                &.guarantee
-                  bg-image('guarantee_1')
-                &.invoice
-                  bg-image('invoice_1')
-                &.special
-                  bg-image('special_1')
+              flex-shrink 0
+              .line
+                width 110px
+                border-top 1px solid rgba(255, 255, 255, 0.2)
               .text
+                font-size 14px
+                font-weight 700
                 margin-left 12px
-                font-size 12px
-                line-height 12px
-                color rgb(255, 255, 255)
-      .seller-bulletin
-        padding-left 36px
-        padding-right 36px
-        .title
-          margin-top 28px
-          margin-bottom 24px
-          display flex
-          align-items center
-          flex-shrink 0
-          .line
-            width 110px
-            border-top 1px solid rgba(255, 255, 255, 0.2)
-          .text
-            font-size 14px
-            font-weight 700
-            margin-left 12px
-            margin-right 12px
-            text-align center
-        .description
-          padding-left 12px
-          padding-right 12px
-          font-size 12px
-          line-height 24px
+                margin-right 12px
+                text-align center
+            .sale-detail
+              padding-left 12px
+              .sale-item
+                margin-bottom 12px
+                display flex
+                align-items center
+                .icon
+                  width 16px
+                  height 16px
+                  background-size cover
+                  background-repeat no-repeat
+                  &.decrease
+                    bg-image('decrease_1')
+                  &.discount
+                    bg-image('discount_1')
+                  &.guarantee
+                    bg-image('guarantee_1')
+                  &.invoice
+                    bg-image('invoice_1')
+                  &.special
+                    bg-image('special_1')
+                .text
+                  margin-left 12px
+                  font-size 12px
+                  line-height 12px
+                  color rgb(255, 255, 255)
+          .seller-bulletin
+            padding-left 36px
+            padding-right 36px
+            .title
+              margin-top 28px
+              margin-bottom 24px
+              display flex
+              align-items center
+              flex-shrink 0
+              .line
+                width 110px
+                border-top 1px solid rgba(255, 255, 255, 0.2)
+              .text
+                font-size 14px
+                font-weight 700
+                margin-left 12px
+                margin-right 12px
+                text-align center
+            .description
+              padding-left 12px
+              padding-right 12px
+              font-size 12px
+              line-height 24px
       .detail-close
-        position absolute
-        bottom 32px
-        left 0
+        text-align center
+        margin-top -64px
         font-size 32px
         line-height 32px
-        left 50%
-        transform translateX(-50%)
 </style>
